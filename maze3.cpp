@@ -25,7 +25,7 @@ class Maze
         Maze() = default;
         bool isInBounds(int rows, int columns);
         bool isAvailable(int rows, int columns);
-        bool isAvailablePathFinding(int rows, int columns, int formerRows, int formerColumns, int position);
+        bool isAvailablePathFinding(int rows, int columns, int position);
         
         void getInput(int argc, char **argv);
         void startMaze(int argc, char **argv);
@@ -68,8 +68,7 @@ bool Maze::isAvailable(int rows, int columns)
     return false;
  }
 
-bool Maze::isAvailablePathFinding(int rows, int columns, int formerRows,
-                                      int formerColumns, int position)  
+bool Maze::isAvailablePathFinding(int rows, int columns, int position)  
  {
     if(isInBounds(rows, columns))
     {
@@ -77,25 +76,25 @@ bool Maze::isAvailablePathFinding(int rows, int columns, int formerRows,
         {
             if(position == EAST)
             {
-                return !(mazeMatrix.at(formerRows).at(formerColumns).hasEast);
+                return !mazeMatrix.at(rows).at(columns).hasWest;
             }
             if(position == WEST)
             {
-                return !(mazeMatrix.at(formerRows).at(formerColumns).hasWest);
+                return !mazeMatrix.at(rows).at(columns).hasEast;
             }
-            if(position == NORTH )
+            if(position == NORTH)
             {
-                return !(mazeMatrix.at(formerRows).at(formerColumns).hasNorth);
+                return !mazeMatrix.at(rows).at(columns).hasSouth;
             }
             if(position == SOUTH)
             {
-                return !mazeMatrix.at(formerRows).at(formerColumns).hasSouth;
+                return !mazeMatrix.at(rows).at(columns).hasNorth;
             }
+            return false;
         }               
     }
     return false;
  }
-
 void Maze::getInput(int argc, char **argv)
 {   
     if( argc == 3 || argc == 4)
@@ -218,7 +217,7 @@ bool Maze::findPath(int x, int y)
         xNext = x + neighborIndexes.at(position).first;
         yNext = y + neighborIndexes.at(position).second;
 
-        if(isAvailablePathFinding(xNext, yNext, x, y, position))
+        if(isAvailablePathFinding(xNext, yNext, position))
         {   
             pathToExit.push_back(std::make_pair(xNext, yNext));
 
